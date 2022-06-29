@@ -8,7 +8,7 @@ from bullet import Bullet
 from settings import Settings
 from scoreboard import Scoreboard
 from game_stats import GameStats
-
+from pygame import mixer
 
 class AlienInvasion:
 
@@ -30,7 +30,10 @@ class AlienInvasion:
         self._create_fleet()
         self.play_button = Button(self, "Play")
 
-
+        self.soundShoot = pygame.mixer.Sound('songs/shoot.wav')
+        self.soundLevel = pygame.mixer.Sound('songs/level.wav')
+        self.soundLose = pygame.mixer.Sound('songs/lose.wav')
+        self.soundStart = pygame.mixer.Sound('songs/start.wav')
 
 
     def _create_fleet(self):
@@ -49,7 +52,8 @@ class AlienInvasion:
             
 
     def _ship_hit(self):
-
+        
+        self.soundLose.play()
         if self.stats.ships_left > 0:
 
             self.stats.ships_left -= 1
@@ -105,7 +109,8 @@ class AlienInvasion:
 
 
     def _check_play_button(self, mouse_pos):
-
+        
+        self.soundStart.play()
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
         
         if button_clicked and self.play_button.rect.collidepoint(mouse_pos):
@@ -134,6 +139,7 @@ class AlienInvasion:
             sys.exit()
     
         elif event.key == pygame.K_SPACE:
+            self.soundShoot.play()
             self._fire_bullet()
 
 
@@ -167,6 +173,7 @@ class AlienInvasion:
             self.settings.increase_speed()
 
             self.stats.level += 1
+            self.soundLevel.play()
             self.sb.prep_level()
 
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
@@ -190,8 +197,11 @@ class AlienInvasion:
 
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
+
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+
+
         self.aliens.draw(self.screen)
         self.sb.show_score()
 
