@@ -1,4 +1,4 @@
-import pygame 
+import pygame , random
 from pygame.sprite import Sprite
 
 class Alien(Sprite):
@@ -8,7 +8,7 @@ class Alien(Sprite):
         super().__init__()
         self.screen = ai_game.screen
         self.settings = ai_game.settings
-        self.image = pygame.image.load('images/logo3.jpeg')
+        self.image = pygame.image.load('images/' + str(random.randint(2, 10)) + '.png')
         self.image = pygame.transform.scale(self.image, (80, 80))
         self.rect = self.image.get_rect()
 
